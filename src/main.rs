@@ -3,7 +3,7 @@ use std::net::Ipv6Addr;
 
 /// Generate a random hexadecimal string with a value up to the maximum provided
 fn generate_hex(max_hex_value_as_int: u16) -> String {
-  let random_value: u16 = rand::thread_rng().gen_range(0..=max_hex_value_as_int);
+  let random_value: u16 = rand::rng().random_range(0..=max_hex_value_as_int);
   if max_hex_value_as_int == 255 {
     return format!("{:02x}", random_value); // Ensure two digits for byte representation
   } else {
