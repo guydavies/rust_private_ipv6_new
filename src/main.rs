@@ -157,4 +157,30 @@ mod tests {
         assert_eq!(segments[6], 0);
         assert_eq!(segments[7], 0);
     }
+
+    #[test]
+    fn test_generated_address_is_valid_ula() {
+        // Test that the generated address is within the valid ULA range
+        // fc00::/7 may be allocated for ULA, but fc00::/8 is reserved for future use
+        // Only fd00::/8 is currently valid for ULA
+        for _ in 0..100 {  // Test multiple generations to ensure consistency
+            let (addr, _) = create_unique_local_prefix();
+
+            // Get the first octet (most significant 8 bits)
+            let first_octet = (addr.segments()[0] >> 8) as u8;
+
+            // Ensure it's in the fd00::/8 range (0xfd)
+            assert_eq!(first_octet, 0xfd,
+                "Generated address {addr} is not in valid ULA range fd00::/8. First octet: 0x{first_octet:02x}");
+
+            // Additional check: ensure it's NOT in the reserved fc00::/8 range
+            assert_ne!(first_octet, 0xfc,
+                "Generated address {addr} is in reserved fc00::/8 range, should be in fd00::/8");
+
+            // Verify it's within the broader ULA range fc00::/7
+            // (first bit of first octet should be 1 for fc00::/7)
+            assert!(first_octet & 0xfe == 0xfc,
+                "Generated address {addr} is not within ULA range fc00::/7");
+        }
+    }
 }
