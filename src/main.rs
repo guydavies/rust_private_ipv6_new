@@ -144,7 +144,8 @@ mod tests {
             let first_octet = (addr.segments()[0] >> 8) as u8;
             // Ensure it's in the fd00::/8 range (0xfd)
             assert_eq!(first_octet, 0xfd,
-        "Generated address {addr} is not in valid ULA range fd00::/8. First octet: 0x{first_octet:02x}");
+                "Generated address {addr} is not in valid ULA range fd00::/8. First octet: 0x{first_octet:02x}"
+            );
             // Additional check: ensure it's NOT in the reserved fc00::/8 range
             assert_ne!(
                 first_octet, 0xfc,
